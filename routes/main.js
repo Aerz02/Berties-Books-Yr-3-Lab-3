@@ -38,7 +38,11 @@ module.exports = (app, shopData) => {
     
     // registering user to database
     
-    app.post('/registered', [check('email', 'Not an email').isEmail(), check('password', 'Password must be at least 8 characters long').isLength({min: 8})], (req, res) => {
+    app.post('/registered', [
+        // check email 
+        check('email', 'Not an email').isEmail(),
+        // check password
+        check('password').isLength({min: 8}).withMessage('Password Must Be at Least 8 Characters')], (req, res) => {
         const errors = validationResult(req);
         if (! errors.isEmpty()) res.redirect('./register');
         else {
