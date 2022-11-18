@@ -23,17 +23,14 @@ module.exports = (app, shopData) => {
     // search result page route
     app.get('/search-result', (req, res) => {
         //searching in the database
-        //res.send("You searched for: " + req.query.keyword);
-        
         let sqlquery = "SELECT * FROM books WHERE name LIKE '%" + req.sanitize(req.query.keyword) + "%'"; // query database to get all the books
         // execute sql query
         db.query(sqlquery, (err, result) => {
-            if (err) {
-                res.redirect('./');
-            }
+            if (err) res.redirect('./');
+            else if (result.length === 0) res.send('Book does not exists. If you want to add it' + '<a href=./addbook>Add book</a>' )
             let newData = Object.assign({}, shopData, { availableBooks: result });
-            console.log(newData)
-            res.render("list.ejs", newData)
+            console.log(newData);
+            res.render("list.ejs", newData);
         });
     });
     // register page route
@@ -68,6 +65,7 @@ module.exports = (app, shopData) => {
     app.post('/loggedin', (req, res) => {
         //checks if user exists
         let username = req.sanitize(req.body.username);
+        let password = req.sanitize(req.body.password);
         let sqlquery = "SELECT username, password FROM users WHERE username = ? ";
         db.query(sqlquery, username, (err, result) => {
             let user = result[0];
@@ -78,7 +76,7 @@ module.exports = (app, shopData) => {
 
             else {
                 // Compare the password supplied with the password in the database
-                bcrypt.compare(req.sanitize(req.body.password), user.password, (err, result) => {
+                bcrypt.compare(password, user.password, (err, result) => {
                     if (err) console.error(err.message);
 
                     else if (result) {
@@ -102,9 +100,7 @@ module.exports = (app, shopData) => {
     app.get('/list', redirectLogin, (req, res) => {
         // execute sql query
         db.query("SELECT * FROM books", (err, result) => {
-            if (err) {
-                res.redirect('./');
-            }
+            if (err) res.redirect('./');
             let newData = Object.assign({}, shopData, { availableBooks: result });
             res.render("list.ejs", newData)
         });
