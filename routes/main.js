@@ -55,7 +55,7 @@ module.exports = (app, shopData) => {
                 let newUser = [req.sanitize(req.body.first), req.sanitize(req.body.last), req.sanitize(req.body.username), req.sanitize(req.body.email), hashedPassword];
                 db.query(sqlquery, newUser, (err, result) => { if (err) return console.error(err.message); });
 
-                message = 'Hello ' + req.sanitize(req.body.first) + ' ' + req.sanitize(req.body.last) + ' you are now registered! We will send an email to you at ' + req.sanitize(req.body.email);
+                message = 'Hello sanitised ' + req.sanitize(req.body.first) + ' ' + req.sanitize(req.body.last) + ' you are now registered! We will send an email to you at ' + req.sanitize(req.body.email);
                 message += ' Your password is: ' + plainPassword + ' and your hashed password is: ' + hashedPassword;
                 res.send(message +  '<a href='+'./'+'> Home page</a>');
             });
@@ -161,7 +161,7 @@ module.exports = (app, shopData) => {
     });
     
     // adding book to database
-    app.post('/bookadded', [check('name').isAlpha, check('price').isDecimal],(req, res) => {
+    app.post('/bookadded', (req, res) => {
         // saving data in database
         let sqlquery = "INSERT INTO books (name, price) VALUES (?,?)";
         // execute sql query
@@ -169,7 +169,7 @@ module.exports = (app, shopData) => {
         db.query(sqlquery, newrecord, (err, result) => {
             if (err) return console.error(err.message);
 
-            else res.send(req.body.name + " with price £" + req.body.price + " has been added." + '<a href='+'./addbook'+'> Add another book </a>');
+            else res.send(req.body.name + " with price £" + req.body.price + " has been added. " + '<a href=./addbook>Add another book</a>');
         });
     });
     
