@@ -58,7 +58,7 @@ module.exports = (app, shopData) => {
                     db.query(sqlquery, newUser, (err, result) => { if (err) return console.error(err.message); });
                     msg = 'Hello ' + req.body.first + ' ' + req.body.last + ' you are now registered! We will send an email to you at ' + req.body.email;
                     msg += ' Your password is: ' + req.body.password + ' and your hashed password is: ' + hashedPassword;
-                    res.send(msg);
+                    res.send(msg +  '<a href='+'./'+'>Home page</a>');
                 });
             }
         });
