@@ -178,8 +178,8 @@ module.exports = (app, shopData) => {
         // saving data in database
         let sqlquery = "INSERT INTO books (name, price) VALUES (?,?)";
         // execute sql query
-        let newrecord = [req.sanitize(req.body.name), req.sanitize(req.body.price)];
-        db.query(sqlquery, newrecord, (err, result) => {
+        let newBook = [req.sanitize(req.body.name), req.sanitize(req.body.price)];
+        db.query(sqlquery, newBook, (err, result) => {
             //return error message if there's an error
             if (err) return console.error(err.message);
 
