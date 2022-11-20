@@ -100,7 +100,10 @@ module.exports = (app, shopData) => {
                         res.send(user.username + " has logged in successfully " +  '<a href=./>Home page</a>');
                     }
                     // password don't match
-                    else res.send("Incorrect Password");
+                    else {
+                        res.send("Incorrect Password");
+                        res.redirect('/login');
+                    }
                 });
             }
         });
