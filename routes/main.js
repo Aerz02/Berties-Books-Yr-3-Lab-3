@@ -21,7 +21,7 @@ module.exports = (app, shopData) => {
     app.get('/search', redirectLogin, (req, res) => res.render("search.ejs", shopData));
     
     // search result page route
-    app.get('/search-result', check('keyword').isAlphanumeric(),(req, res) => {
+    app.get('/search-result', check('keyword').exists().isAlphanumeric(),(req, res) => {
         //searching in the database
         let sqlquery = "SELECT * FROM books WHERE name LIKE '%" + req.sanitize(req.query.keyword) + "%'"; // query database to get all the books
         // execute sql query
@@ -42,11 +42,11 @@ module.exports = (app, shopData) => {
     // registering user to database
     app.post('/registered', [
         // check email 
-        check('email', 'Not an email').isEmail(),
+        check('email', 'Not an email').exists().isEmail(),
         // check password
-        check('password').isLength({min: 8}).withMessage('Password Must Be at Least 8 Characters'),
+        check('password').exists().isLength({min: 8}).withMessage('Password Must Be at Least 8 Characters'),
         //checks username
-        check('username').isAscii()], (req, res) => {
+        check('username').exists().isAscii()], (req, res) => {
         // checks validation
         const errors = validationResult(req);
         //if there are error, redirect to the register page
@@ -141,7 +141,7 @@ module.exports = (app, shopData) => {
         res.render('deleteusers.ejs', shopData);
     });
     // deletes user 
-    app.post('/deleteduser', check('username').isAscii(), (req, res) => {
+    app.post('/deleteduser', check('username').exists().isAscii(), (req, res) => {
         let username = req.sanitize(req.body.username);
         // checks if username exits within the database
         let sqlquery = "SELECT * FROM users WHERE username = ? ";
