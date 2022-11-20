@@ -21,7 +21,7 @@ module.exports = (app, shopData) => {
     app.get('/search', redirectLogin, (req, res) => res.render("search.ejs", shopData));
     
     // search result page route
-    app.get('/search-result', (req, res) => {
+    app.get('/search-result', check('keyword').isAlphanumeric(),(req, res) => {
         //searching in the database
         let sqlquery = "SELECT * FROM books WHERE name LIKE '%" + req.sanitize(req.query.keyword) + "%'"; // query database to get all the books
         // execute sql query
@@ -44,7 +44,9 @@ module.exports = (app, shopData) => {
         // check email 
         check('email', 'Not an email').isEmail(),
         // check password
-        check('password').isLength({min: 8}).withMessage('Password Must Be at Least 8 Characters')], (req, res) => {
+        check('password').isLength({min: 8}).withMessage('Password Must Be at Least 8 Characters'),
+        //checks username
+        check('username').isAscii()], (req, res) => {
         // checks validation
         const errors = validationResult(req);
         //if there are error, redirect to the register page
