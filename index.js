@@ -30,7 +30,7 @@ app.use(express.static(__dirname + '/public'));
 const db = mysql.createConnection ({
     host: 'localhost',
     user: 'root',
-    password: 'Samsung001234!!',
+    password: '**********',
     database: 'myBookshop'
 });
 // Connect to the database
